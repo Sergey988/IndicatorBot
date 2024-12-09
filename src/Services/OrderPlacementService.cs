@@ -19,7 +19,7 @@ public class OrderPlacementService(IMexcRestClient client)
 
         LogHelper.Log($"Signal received: {signal}. Order Amount: {orderAmount} on {config.Pair}");
 
-        await PlaceMarketOrderAsync(config, signal, orderAmount);
+        await PlaceMarketOrderAsync(config.Pair, signal, orderAmount);
     }
 
     private async Task<decimal> GetValidOrderAmountAsync(EnvConfig config, string signal)
@@ -44,19 +44,20 @@ public class OrderPlacementService(IMexcRestClient client)
         };
     }
 
-    private async Task PlaceMarketOrderAsync(EnvConfig config, string signal, decimal orderAmount)
+    private async Task PlaceMarketOrderAsync(string pair, string signal, decimal orderAmount)
     {
         var orderResult = await client.SpotApi.Trading.PlaceOrderAsync(
-            symbol: config.Pair,
+            symbol: pair,
             side: signal == "BUY" ? OrderSide.Buy : OrderSide.Sell,
             type: OrderType.Market,
-            quantity: orderAmount);
+            quantity: signal == "SELL" ? orderAmount : null,
+            quoteQuantity: signal == "BUY" ? orderAmount : null);
 
         if (!orderResult.Success)
         {
             throw new Exception($"Failed to place market order: {orderResult.Error}");
         }
 
-        LogHelper.Log($"Order placed successfully: {signal} {orderAmount} {config.Pair}. Order ID: {orderResult.Data.OrderId}");
+        LogHelper.Log($"Order placed successfully: {signal} {orderAmount} {pair}. Order ID: {orderResult.Data.OrderId}");
     }
 }
