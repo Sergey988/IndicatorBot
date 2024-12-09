@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using CryptoExchange.Net.Attributes;
-using KlineInterval = Bitget.Net.Enums.V2.KlineInterval;
+using KlineInterval = Mexc.Net.Enums.KlineInterval;
 
 namespace IndicatorBot.Helpers;
 

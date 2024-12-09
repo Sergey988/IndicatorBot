@@ -1,9 +1,9 @@
 using Amazon.Lambda.Core;
-using Bitget.Net.Clients;
-using Bitget.Net.Objects;
+using CryptoExchange.Net.Authentication;
 using IndicatorBot.Helpers;
 using IndicatorBot.Models;
 using IndicatorBot.Services;
+using Mexc.Net.Clients;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
@@ -14,14 +14,14 @@ public class Function
     public static async Task FunctionHandler()
     {      
         var config = new EnvConfig();
-
+        
         LogHelper.SetLoggingEnabled(config.Logger);
 
         try
         {
-            var client = new BitgetRestClient();
+            var client = new MexcRestClient();
             
-            client.SetApiCredentials(new BitgetApiCredentials(config.ApiKey, config.SecretKey, config.Passphrase));
+            client.SetApiCredentials(new ApiCredentials(config.ApiKey, config.SecretKey));
             
             var signal = await new KlineAnalysisService(client).AnalyzeKlinesAsync(
                 pair: config.Pair,
@@ -35,8 +35,8 @@ public class Function
                 LogHelper.Log("No valid signal generated. Skipping further operations.");
                 return;
             }
-            
-            await new OrderPlacementService(client).PlaceOrderAsync(config.Pair, signal, config.SellSymbol, config.BuySymbol);
+
+            await new OrderPlacementService(client).PlaceOrderAsync(config, signal);
         }
         catch (Exception ex)
         {

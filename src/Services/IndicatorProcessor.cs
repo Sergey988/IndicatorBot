@@ -1,12 +1,12 @@
-﻿using Bitget.Net.Objects.Models.V2;
-using IndicatorBot.Helpers;
+﻿using IndicatorBot.Helpers;
+using Mexc.Net.Objects.Models.Spot;
 using Skender.Stock.Indicators;
 
 namespace IndicatorBot.Services;
 
 public static class IndicatorProcessor
 {
-    public static IEnumerable<SuperTrendResult> CalculateSuperTrend(IEnumerable<BitgetKline> klines, int atrPeriod, double multiplier)
+    public static IEnumerable<SuperTrendResult> CalculateSuperTrend(IEnumerable<MecxKline> klines, int atrPeriod, double multiplier)
     {
         var quotes = klines.Select(kline => new Quote
         {
@@ -22,7 +22,7 @@ public static class IndicatorProcessor
     }
 
     public static string? ProcessSuperTrendResults(
-        IEnumerable<BitgetKline> klines,
+        IEnumerable<MecxKline> klines,
         IEnumerable<SuperTrendResult> superTrendResults,
         string symbol)
     {
@@ -44,8 +44,8 @@ public static class IndicatorProcessor
         return action;
     }
 
-    private static (BitgetKline? lastKline, SuperTrendResult? lastIndicator) ValidateInputs(
-        IEnumerable<BitgetKline> klines,
+    private static (MecxKline? lastKline, SuperTrendResult? lastIndicator) ValidateInputs(
+        IEnumerable<MecxKline> klines,
         IEnumerable<SuperTrendResult> superTrendResults)
     {
         var lastKline = klines.Last();

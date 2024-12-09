@@ -1,57 +1,62 @@
-﻿using Bitget.Net.Enums.V2;
-using Bitget.Net.Interfaces.Clients;
-using IndicatorBot.Helpers;
+﻿using IndicatorBot.Helpers;
+using IndicatorBot.Models;
+using Mexc.Net.Enums;
+using Mexc.Net.Interfaces.Clients;
 
 namespace IndicatorBot.Services;
 
-public class OrderPlacementService(IBitgetRestClient client)
+public class OrderPlacementService(IMexcRestClient client)
 {
-    public async Task PlaceOrderAsync(string pair, string signal, string sellSymbol, string buySymbol)
+    public async Task PlaceOrderAsync(EnvConfig config, string signal)
+    {
+        var orderAmount = await GetValidOrderAmountAsync(config, signal);
+    
+        if (orderAmount <= 0)
         {
-            var accountBalanceResult = await client.SpotApiV2.Account.GetSpotBalancesAsync();
-
-            if (!accountBalanceResult.Success || accountBalanceResult.Data == null)
-            {
-                throw new Exception($"Failed to fetch balance: {accountBalanceResult.Error}");
-            }
-
-            var baseBalance = accountBalanceResult.Data.FirstOrDefault(b => b.Asset == sellSymbol);
-            var quoteBalance = accountBalanceResult.Data.FirstOrDefault(b => b.Asset == buySymbol);
-
-            LogHelper.Log($"Balance: {sellSymbol}-{baseBalance}, {buySymbol}-{quoteBalance}.");
-            
-            // TODO: min order amount ???
-            var orderAmount = signal switch
-            {
-                "BUY" => quoteBalance?.Available ?? 0,
-                "SELL" => baseBalance?.Available ?? 0,
-                _ => 0
-            };
-
-            if (orderAmount <= 0)
-            {
-                LogHelper.Log($"Insufficient balance for {signal} signal on {pair}.");
-                return;
-            }
-
-            LogHelper.Log($"Signal received: {signal}. Order Amount: {orderAmount} {pair}");
-
-            var orderSide = signal == "BUY" ? OrderSide.Buy : OrderSide.Sell;
-            const OrderType orderType = OrderType.Market;
-            const TimeInForce timeInForce = TimeInForce.GoodTillCanceled;
-
-            var orderResult = await client.SpotApiV2.Trading.PlaceOrderAsync(
-                symbol: pair,
-                side: orderSide,
-                type: orderType,
-                quantity: orderAmount,
-                timeInForce: timeInForce);
-
-            if (!orderResult.Success)
-            {
-                throw new Exception($"Failed to place market order: {orderResult.Error}");
-            }
-
-            LogHelper.Log($"Order placed successfully: {signal} {orderAmount} {pair}. Order ID: {orderResult.Data.OrderId}");
+            LogHelper.Log($"Insufficient balance for {signal} signal on {config.Pair}.");
+            return;
         }
+
+        LogHelper.Log($"Signal received: {signal}. Order Amount: {orderAmount} on {config.Pair}");
+
+        await PlaceMarketOrderAsync(config, signal, orderAmount);
     }
+
+    private async Task<decimal> GetValidOrderAmountAsync(EnvConfig config, string signal)
+    {
+        var accountBalanceResult = await client.SpotApi.Account.GetAccountInfoAsync();
+
+        if (!accountBalanceResult.Success || accountBalanceResult.Data == null)
+        {
+            throw new Exception($"Failed to fetch balance: {accountBalanceResult.Error}");
+        }
+
+        var baseBalance = accountBalanceResult.Data.Balances.FirstOrDefault(b => b.Asset == config.SellSymbol)?.Available ?? 0;
+        var quoteBalance = accountBalanceResult.Data.Balances.FirstOrDefault(b => b.Asset == config.BuySymbol)?.Available ?? 0;
+
+        LogHelper.Log($"Available Balance: {config.SellSymbol} - {baseBalance}, {config.BuySymbol} - {quoteBalance}.");
+    
+        return signal switch
+        {
+            "BUY" => quoteBalance < config.MinBuyOrderAmount ? 0 : quoteBalance,
+            "SELL" => baseBalance < config.MinSellOrderAmount ? 0 : baseBalance,
+            _ => 0
+        };
+    }
+
+    private async Task PlaceMarketOrderAsync(EnvConfig config, string signal, decimal orderAmount)
+    {
+        var orderResult = await client.SpotApi.Trading.PlaceOrderAsync(
+            symbol: config.Pair,
+            side: signal == "BUY" ? OrderSide.Buy : OrderSide.Sell,
+            type: OrderType.Market,
+            quantity: orderAmount);
+
+        if (!orderResult.Success)
+        {
+            throw new Exception($"Failed to place market order: {orderResult.Error}");
+        }
+
+        LogHelper.Log($"Order placed successfully: {signal} {orderAmount} {config.Pair}. Order ID: {orderResult.Data.OrderId}");
+    }
+}

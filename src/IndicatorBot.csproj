@@ -13,9 +13,8 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="2.5.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="2.2.4" />
-    <PackageReference Include="BitGet.Net" Version="8.5.7" />
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
-    <PackageReference Include="JK.Bitget.Net" Version="1.18.1" />
+    <PackageReference Include="JK.Mexc.Net" Version="1.13.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Skender.Stock.Indicators" Version="3.0.0-preview1014-0025" />
     <PackageReference Include="Utils.EnvironmentManager" Version="4.1.0" />

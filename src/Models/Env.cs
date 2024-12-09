@@ -25,6 +25,12 @@ public enum Env
     [EnvironmentVariable(typeof(string), isRequired: true)]
     Pair,
     
+    [EnvironmentVariable(typeof(decimal), isRequired: true)]
+    MinBuyOrderAmount,
+    
+    [EnvironmentVariable(typeof(decimal), isRequired: true)]
+    MinSellOrderAmount,
+    
     [EnvironmentVariable(typeof(bool), isRequired: true)]
     Logger,
     
@@ -32,8 +38,5 @@ public enum Env
     ApiKey,
     
     [EnvironmentVariable(typeof(string), isRequired: true)]
-    SecretKey,
-    
-    [EnvironmentVariable(typeof(string), isRequired: true)]
-    Passphrase
+    SecretKey
 }
