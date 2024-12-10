@@ -35,6 +35,11 @@ public class OrderPlacementService(IMexcRestClient client)
         var quoteBalance = accountBalanceResult.Data.Balances.FirstOrDefault(b => b.Asset == config.BuySymbol)?.Available ?? 0;
 
         LogHelper.Log($"Available Balance: {config.SellSymbol} - {baseBalance}, {config.BuySymbol} - {quoteBalance}.");
+
+        baseBalance = Math.Round(baseBalance, config.SellOrderDecimals);
+        quoteBalance = Math.Round(quoteBalance, config.BuyOrderDecimals);
+
+        LogHelper.Log($"Order Balance: {config.SellSymbol} - {baseBalance}, {config.BuySymbol} - {quoteBalance}.");
     
         return signal switch
         {

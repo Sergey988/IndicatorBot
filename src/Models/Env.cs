@@ -38,5 +38,11 @@ public enum Env
     ApiKey,
     
     [EnvironmentVariable(typeof(string), isRequired: true)]
-    SecretKey
+    SecretKey,
+    
+    [EnvironmentVariable(typeof(int), isRequired: true)]
+    BuyOrderDecimals,
+
+    [EnvironmentVariable(typeof(int), isRequired: true)]
+    SellOrderDecimals
 }

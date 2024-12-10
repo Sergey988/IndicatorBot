@@ -14,6 +14,8 @@ public class Function
     public static async Task FunctionHandler()
     {      
         var config = new EnvConfig();
+
+
         
         LogHelper.SetLoggingEnabled(config.Logger);
 

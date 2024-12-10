@@ -16,9 +16,9 @@
     "function-handler"      : "IndicatorBot::IndicatorBot.Function::FunctionHandler",
     "framework"             : "net8.0",
     "function-name"         : "SuperTrendIndicatorBot",
-    "function-description"  : "first deploy",
+    "function-description"  : "add buy and sell order decimals",
     "package-type"          : "Zip",
     "tracing-mode"          : "PassThrough",
-    "environment-variables" : "\"BuySymbol\"=\"BTC\";\"SuperTrendAtrPeriod\"=\"10\";\"SecretKey\"=\"84df4ca7495d437e97705a056468ae18\";\"ApiKey\"=\"mx0vgli384c6i3XHuh\";\"MinSellOrderAmount\"=\"0.0001286\";\"SellSymbol\"=\"ETH\";\"SuperTrendMultiplier\"=\"3\";\"KlineLimit\"=\"250\";\"MinBuyOrderAmount\"=\"0.00005016\";\"Logger\"=\"true\";\"KlineInterval\"=\"5m\";\"Pair\"=\"ETHBTC\"",
+    "environment-variables" : "\"BuySymbol\"=\"BTC\";\"SuperTrendAtrPeriod\"=\"10\";\"ApiKey\"=\"mx0vgli384c6i3XHuh\";\"SellSymbol\"=\"ETH\";\"MinBuyOrderAmount\"=\"0.00005016\";\"Logger\"=\"true\";\"KlineInterval\"=\"5m\";\"BuyOrderDecimals\"=\"6\";\"SecretKey\"=\"84df4ca7495d437e97705a056468ae18\";\"MinSellOrderAmount\"=\"0.0001286\";\"SuperTrendMultiplier\"=\"3\";\"KlineLimit\"=\"250\";\"SellOrderDecimals\"=\"3\";\"Pair\"=\"ETHBTC\"",
     "image-tag"             : ""
 }
