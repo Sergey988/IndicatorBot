@@ -44,5 +44,8 @@ public enum Env
     BuyOrderDecimals,
 
     [EnvironmentVariable(typeof(int), isRequired: true)]
-    SellOrderDecimals
+    SellOrderDecimals,
+    
+    [EnvironmentVariable(typeof(string), isRequired: true)]
+    DiscordWebhooks
 }

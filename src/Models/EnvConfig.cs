@@ -18,4 +18,5 @@ public class EnvConfig
     public string SecretKey { get; } = Env.SecretKey.Get<string>();
     public int BuyOrderDecimals { get; } = Env.BuyOrderDecimals.Get<int>();
     public int SellOrderDecimals { get; } = Env.SellOrderDecimals.Get<int>();
+    public string DiscordWebhooks { get; set; } = Env.DiscordWebhooks.Get<string>();
 }
