@@ -7,7 +7,7 @@ public class EnvConfig
     public int KlineLimit { get; } = Env.KlineLimit.Get<int>();
     public string KlineInterval { get; } = Env.KlineInterval.Get<string>();
     public int SuperTrendAtrPeriod { get; } = Env.SuperTrendAtrPeriod.Get<int>();
-    public int SuperTrendMultiplier { get; } = Env.SuperTrendMultiplier.Get<int>();
+    public double SuperTrendMultiplier { get; } = Env.SuperTrendMultiplier.Get<double>();
     public string SellSymbol { get; } = Env.SellSymbol.Get<string>();
     public string BuySymbol { get; } = Env.BuySymbol.Get<string>();
     public decimal MinBuyOrderAmount { get; } = Env.MinBuyOrderAmount.Get<decimal>();

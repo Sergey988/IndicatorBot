@@ -13,7 +13,7 @@ public enum Env
     [EnvironmentVariable(typeof(int), isRequired: true)]
     SuperTrendAtrPeriod,
     
-    [EnvironmentVariable(typeof(int), isRequired: true)]
+    [EnvironmentVariable(typeof(double), isRequired: true)]
     SuperTrendMultiplier,
     
     [EnvironmentVariable(typeof(string), isRequired: true)]
