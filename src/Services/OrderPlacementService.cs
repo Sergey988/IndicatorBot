@@ -41,8 +41,8 @@ public class OrderPlacementService(IMexcRestClient client)
 
         LogHelper.Log($"Available Balance: {config.SellSymbol} - {baseBalance}, {config.BuySymbol} - {quoteBalance}.");
 
-        baseBalance = Math.Round(baseBalance, config.SellOrderDecimals);
-        quoteBalance = Math.Round(quoteBalance, config.BuyOrderDecimals);
+        baseBalance = decimal.Floor(baseBalance * (decimal)Math.Pow(10, config.SellOrderDecimals)) / (decimal)Math.Pow(10, config.SellOrderDecimals);
+        quoteBalance = decimal.Floor(quoteBalance * (decimal)Math.Pow(10, config.BuyOrderDecimals)) / (decimal)Math.Pow(10, config.BuyOrderDecimals);
 
         LogHelper.Log($"Order Balance: {config.SellSymbol} - {baseBalance}, {config.BuySymbol} - {quoteBalance}.");
 
@@ -78,7 +78,7 @@ public class OrderPlacementService(IMexcRestClient client)
     {
         var payload = new
         {
-            content = $"✅ Order Placed Successfully!\n\n- UTCTime: {DateTime.UtcNow}\n- Pair: {pair}\n- Signal: {signal}\n- Amount: {orderAmount}\n- Order ID: {orderId}"
+            content = $"✅ Order Placed Successfully!\n- UTCTime: {DateTime.UtcNow}\n- Pair: {pair}\n- Signal: {signal}\n- Amount: {orderAmount}\n- Order ID: {orderId}"
         };
 
         try

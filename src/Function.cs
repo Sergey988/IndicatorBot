@@ -15,8 +15,6 @@ public class Function
     {      
         var config = new EnvConfig();
 
-
-        
         LogHelper.SetLoggingEnabled(config.Logger);
 
         try
